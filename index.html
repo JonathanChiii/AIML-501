@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ML Algorithm Framework — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@400;500&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  /* ── Reset & Base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  :root {
+    --bg:        #0b0d11;
+    --bg2:       #13161d;
+    --bg3:       #1a1e28;
+    --border:    rgba(255,255,255,0.07);
+    --border-md: rgba(255,255,255,0.12);
+    --text:      #e8e4da;
+    --muted:     #7a7669;
+    --accent1:   #c8a96e;   /* gold   */
+    --accent2:   #6ec8b4;   /* teal   */
+    --accent3:   #c86e8a;   /* coral  */
+    --accent4:   #6e96c8;   /* blue   */
+
+    --sup-bg:    rgba(200,169,110,0.08);
+    --sup-bd:    rgba(200,169,110,0.25);
+    --sup-text:  #c8a96e;
+    --unsup-bg:  rgba(110,200,180,0.08);
+    --unsup-bd:  rgba(110,200,180,0.25);
+    --unsup-text:#6ec8b4;
+    --dl-bg:     rgba(110,150,200,0.08);
+    --dl-bd:     rgba(110,150,200,0.25);
+    --dl-text:   #6e96c8;
+    --gen-bg:    rgba(200,110,138,0.08);
+    --gen-bd:    rgba(200,110,138,0.25);
+    --gen-text:  #c86e8a;
+
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body:    'Manrope', sans-serif;
+    --font-mono:    'DM Mono', monospace;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.7;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Grain texture overlay ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.6;
+  }
+
+  /* ── Layout ── */
+  .site-wrap { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 0 2rem 6rem; }
+
+  /* ── Hero ── */
+  .hero {
+    padding: 5rem 0 3.5rem;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 2rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 4rem;
+  }
+
+  .hero-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent1);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .hero-tag::before {
+    content: '';
+    display: inline-block;
+    width: 24px; height: 1px;
+    background: var(--accent1);
+  }
+
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    font-weight: 400;
+    line-height: 1.1;
+    color: var(--text);
+    margin-bottom: 1rem;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--accent1);
+  }
+
+  .hero-sub {
+    font-size: 14px;
+    color: var(--muted);
+    max-width: 480px;
+    line-height: 1.75;
+  }
+
+  .hero-meta {
+    text-align: right;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.9;
+  }
+
+  .hero-meta strong {
+    color: var(--text);
+    font-weight: 500;
+    display: block;
+  }
+
+  /* ── Legend ── */
+  .legend {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 3rem;
+    padding: 1rem 1.25rem;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+
+  .legend-title {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    width: 100%;
+    margin-bottom: 0.25rem;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .legend-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── Filter Bar ── */
+  .filter-bar {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 2.5rem;
+  }
+
+  .filter-btn {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.4rem 0.9rem;
+    border-radius: 4px;
+    border: 1px solid var(--border-md);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .filter-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.25); }
+  .filter-btn.active { background: var(--accent1); border-color: var(--accent1); color: var(--bg); }
+
+  /* ── Section label ── */
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── Algorithm Grid ── */
+  .algo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 5rem;
+  }
+
+  /* ── Algorithm Card ── */
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+    cursor: default;
+    opacity: 1;
+    animation: fadeUp 0.5s both;
+  }
+
+  .card:hover {
+    transform: translateY(-3px);
+    border-color: var(--border-md);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.35);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .card.hidden { display: none; }
+
+  .card-header {
+    padding: 1.1rem 1.25rem 0.85rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .card-num {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 0.3rem;
+  }
+
+  .card-name {
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  .card-abbr {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 0.15rem;
+  }
+
+  .type-badge {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 4px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .type-sup   { background: var(--sup-bg);   border: 1px solid var(--sup-bd);   color: var(--sup-text); }
+  .type-unsup { background: var(--unsup-bg); border: 1px solid var(--unsup-bd); color: var(--unsup-text); }
+  .type-dl    { background: var(--dl-bg);    border: 1px solid var(--dl-bd);    color: var(--dl-text); }
+  .type-gen   { background: var(--gen-bg);   border: 1px solid var(--gen-bd);   color: var(--gen-text); }
+
+  .card-body { padding: 1rem 1.25rem; }
+
+  .card-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.65;
+    margin-bottom: 1rem;
+  }
+
+  /* Domain tags */
+  .domain-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 0.9rem;
+  }
+
+  .domain-tag {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.06em;
+    padding: 2px 7px;
+    border-radius: 3px;
+    border: 1px solid var(--border-md);
+    color: var(--muted);
+  }
+
+  .dtag-tabular { border-color: rgba(200,169,110,0.3); color: rgba(200,169,110,0.7); }
+  .dtag-vision  { border-color: rgba(200,110,138,0.3); color: rgba(200,110,138,0.7); }
+  .dtag-nlp     { border-color: rgba(110,150,200,0.3); color: rgba(110,150,200,0.7); }
+  .dtag-genai   { border-color: rgba(110,200,180,0.3); color: rgba(110,200,180,0.7); }
+
+  /* How it works meter */
+  .card-section-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.4rem;
+    opacity: 0.65;
+  }
+
+  /* Use cases */
+  .use-cases {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 0;
+  }
+
+  .use-case-item {
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    line-height: 1.45;
+  }
+
+  .use-case-item::before {
+    content: '→';
+    color: var(--accent1);
+    font-size: 10px;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  /* Complexity bar */
+  .complexity-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 0.9rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .complexity-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .complexity-bar {
+    flex: 1;
+    height: 3px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .complexity-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: var(--accent1);
+  }
+
+  .complexity-val {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--muted);
+    min-width: 20px;
+    text-align: right;
+  }
+
+  /* ── Relationship map (SVG) ── */
+  .map-section {
+    margin-bottom: 5rem;
+  }
+
+  .map-wrap {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem 1.5rem 1.5rem;
+    overflow-x: auto;
+  }
+
+  .map-wrap svg { display: block; width: 100%; min-width: 600px; }
+
+  /* ── AI Hierarchy strip ── */
+  .hierarchy-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin-bottom: 5rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .h-tier {
+    padding: 1.5rem;
+    border-right: 1px solid var(--border);
+    position: relative;
+  }
+
+  .h-tier:last-child { border-right: none; }
+
+  .h-tier-num {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    margin-bottom: 0.4rem;
+  }
+
+  .h-tier-name {
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+  }
+
+  .h-tier-desc {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .h-tier-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+
+  .t1 .h-tier-bar { background: var(--muted); }
+  .t2 .h-tier-bar { background: var(--accent4); }
+  .t3 .h-tier-bar { background: var(--accent2); }
+  .t4 .h-tier-bar { background: var(--accent3); }
+
+  .t1 .h-tier-name { color: var(--text); }
+  .t2 .h-tier-name { color: var(--accent4); }
+  .t3 .h-tier-name { color: var(--accent2); }
+  .t4 .h-tier-name { color: var(--accent3); }
+
+  /* ── Footer ── */
+  .site-footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .footer-left {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  .footer-right {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--muted);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 640px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-meta { text-align: left; }
+    .hierarchy-strip { grid-template-columns: 1fr 1fr; }
+    .h-tier { border-bottom: 1px solid var(--border); }
+  }
+</style>
+</head>
+<body>
+<div class="site-wrap">
+
+  <!-- ── Hero ── -->
+  <header class="hero">
+    <div>
+      <div class="hero-tag">Portfolio Artifact — Machine Learning</div>
+      <h1>A Visual Framework of<br><em>ML Algorithms</em></h1>
+      <p class="hero-sub">An organized reference mapping 10 core machine learning algorithms across learning paradigms, application domains, real-world use cases, and complexity levels.</p>
+    </div>
+    <div class="hero-meta">
+      <strong>AI / ML Survey</strong>
+      Portfolio Assignment<br>
+      <span id="current-year"></span><br>
+      <script>document.getElementById('current-year').textContent = new Date().getFullYear();</script>
+    </div>
+  </header>
+
+  <!-- ── AI → ML → DL → GenAI Hierarchy ── -->
+  <div class="section-label">The AI Landscape</div>
+  <div class="hierarchy-strip" style="margin-bottom:3rem;">
+    <div class="h-tier t1">
+      <div class="h-tier-bar"></div>
+      <div class="h-tier-num">01</div>
+      <div class="h-tier-name">Artificial Intelligence</div>
+      <div class="h-tier-desc">The broadest field — any technique enabling machines to mimic human intelligence and decision-making.</div>
+    </div>
+    <div class="h-tier t2">
+      <div class="h-tier-bar"></div>
+      <div class="h-tier-num">02</div>
+      <div class="h-tier-name">Machine Learning</div>
+      <div class="h-tier-desc">A subset of AI where systems learn patterns from data rather than following explicit rules.</div>
+    </div>
+    <div class="h-tier t3">
+      <div class="h-tier-bar"></div>
+      <div class="h-tier-num">03</div>
+      <div class="h-tier-name">Deep Learning</div>
+      <div class="h-tier-desc">A subset of ML using multi-layered neural networks to learn hierarchical representations.</div>
+    </div>
+    <div class="h-tier t4">
+      <div class="h-tier-bar"></div>
+      <div class="h-tier-num">04</div>
+      <div class="h-tier-name">Generative AI</div>
+      <div class="h-tier-desc">Deep learning models trained to generate novel content — text, images, audio, and code.</div>
+    </div>
+  </div>
+
+  <!-- ── Legend ── -->
+  <div class="legend">
+    <div class="legend-title">Legend — Algorithm Type</div>
+    <div class="legend-item">
+      <div class="legend-dot" style="background:var(--sup-text);"></div>
+      Supervised Learning
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot" style="background:var(--unsup-text);"></div>
+      Unsupervised Learning
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot" style="background:var(--dl-text);"></div>
+      Deep Learning
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot" style="background:var(--gen-text);"></div>
+      Generative AI
+    </div>
+    <div class="legend-item" style="margin-left:auto; gap:0.75rem;">
+      <span style="font-family:var(--font-mono);font-size:9px;letter-spacing:0.1em;color:var(--muted);">DOMAIN TAGS:</span>
+      <span style="font-family:var(--font-mono);font-size:9px;padding:2px 6px;border-radius:3px;border:1px solid rgba(200,169,110,0.4);color:rgba(200,169,110,0.8);">TABULAR</span>
+      <span style="font-family:var(--font-mono);font-size:9px;padding:2px 6px;border-radius:3px;border:1px solid rgba(200,110,138,0.4);color:rgba(200,110,138,0.8);">VISION</span>
+      <span style="font-family:var(--font-mono);font-size:9px;padding:2px 6px;border-radius:3px;border:1px solid rgba(110,150,200,0.4);color:rgba(110,150,200,0.8);">NLP</span>
+      <span style="font-family:var(--font-mono);font-size:9px;padding:2px 6px;border-radius:3px;border:1px solid rgba(110,200,180,0.4);color:rgba(110,200,180,0.8);">GEN AI</span>
+    </div>
+  </div>
+
+  <!-- ── Filter Bar ── -->
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="filterAlgos('all', this)">All (10)</button>
+    <button class="filter-btn" onclick="filterAlgos('sup', this)">Supervised</button>
+    <button class="filter-btn" onclick="filterAlgos('unsup', this)">Unsupervised</button>
+    <button class="filter-btn" onclick="filterAlgos('dl', this)">Deep Learning</button>
+    <button class="filter-btn" onclick="filterAlgos('gen', this)">Generative AI</button>
+  </div>
+
+  <!-- ── Algorithm Grid ── -->
+  <div class="section-label">Algorithm Framework</div>
+  <div class="algo-grid" id="algo-grid">
+
+    <!-- 01 Linear / Logistic Regression -->
+    <div class="card" data-type="sup" style="animation-delay:0.05s">
+      <div class="card-header">
+        <div>
+          <div class="card-num">01</div>
+          <div class="card-name">Linear &amp; Logistic Regression</div>
+          <div class="card-abbr">LR — Regression / Classification</div>
+        </div>
+        <span class="type-badge type-sup">Supervised</span>
+      </div>
+      <div class="card-body">
+        <p class="card-desc">Fits a line (or decision boundary) through labeled data points by minimizing prediction error. Logistic regression uses a sigmoid function to output probabilities for binary classification. The simplest and most interpretable models in ML.</p>
+        <div class="domain-row">
+          <span class="domain-tag dtag-tabular">Tabular</span>
+        </div>
+        <div class="card-section-label">Real-world use cases</div>
+        <div class="use-cases">
+          <div class="use-case-item">House price prediction from square footage</div>
+          <div class="use-case-item">Email spam detection (logistic)</div>
+          <div class="use-case-item">Credit default probability scoring</div>
+        </div>
+        <div class="complexity-row">
+          <span class="complexity-label">Complexity</span>
+          <div class="complexity-bar"><div class="complexity-fill" style="width:18%;"></div></div>
+          <span class="complexity-val">Low</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 02 Decision Trees -->
+    <div class="card" data-type="sup" style="animation-delay:0.1s">
+      <div class="card-header">
+        <div>
+          <div class="card-num">02</div>
+          <div class="card-name">Decision Trees</div>
+          <div class="card-abbr">DT — Classification &amp; Regression</div>
+        </div>
+        <span class="type-badge type-sup">Supervised</span>
+      </div>
+      <div class="card-body">
+        <p class="card-desc">Recursively partitions data by asking binary questions at each node (e.g., "Is age > 30?"), forming a flowchart-like tree. Each leaf represents a decision outcome. Highly interpretable but prone to overfitting on deep trees.</p>
+        <div class="domain-row">
+          <span class="domain-tag dtag-tabular">Tabular</span>
+        </div>
+        <div class="card-section-label">Real-world use cases</div>
+        <div class="use-cases">
+          <div class="use-case-item">Medical diagnosis rule sets</div>
+          <div class="use-case-item">Loan approval decisions</div>
+          <div class="use-case-item">Customer churn segmentation</div>
+        </div>
+        <div class="complexity-row">
+          <span class="complexity-label">Complexity</span>
+          <div class="complexity-bar"><div class="complexity-fill" style="width:25%;"></div></div>
+          <span class="complexity-val">Low</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 03 Random Forest -->
+    <div class="card" data-type="sup" style="animation-delay:0.15s">
+      <div class="card-header">
+        <div>
+          <div class="card-num">03</div>
+          <div class="card-name">Random Forest</div>
+          <div class="card-abbr">RF — Ensemble Method</div>
+        </div>
+        <span class="type-badge type-sup">Supervised</span>
+      </div>
+      <div class="card-body">
+        <p class="card-desc">Builds hundreds of decision trees on random data subsets and feature subsets, then aggregates their outputs by majority vote or averaging. Dramatically reduces overfitting compared to a single tree. A go-to baseline for tabular data.</p>
+        <div class="domain-row">
+          <span class="domain-tag dtag-tabular">Tabular</span>
+        </div>
+        <div class="card-section-label">Real-world use cases</div>
+        <div class="use-cases">
+          <div class="use-case-item">Fraud detection in banking transactions</div>
+          <div class="use-case-item">Stock market movement classification</div>
+          <div class="use-case-item">Disease diagnosis from clinical data</div>
+        </div>
+        <div class="complexity-row">
+          <span class="complexity-label">Complexity</span>
+          <div class="complexity-bar"><div class="complexity-fill" style="width:38%;"></div></div>
+          <span class="complexity-val">Mid</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 04 Gradient Boosting / XGBoost -->
+    <div class="card" data-type="sup" style="animation-delay:0.2s">
+      <div class="card-header">
+        <div>
+          <div class="card-num">04</div>
+          <div class="card-name">Gradient Boosting</div>
+          <div class="card-abbr">XGBoost / LightGBM / CatBoost</div>
+        </div>
+        <span class="type-badge type-sup">Supervised</span>
+      </div>
+      <div class="card-body">
+        <p class="card-desc">Builds weak learners (shallow trees) sequentially — each new tree corrects the errors of the previous one, following the gradient of the loss function. XGBoost consistently dominates structured data competitions (Kaggle).</p>
+        <div class="domain-row">
+          <span class="domain-tag dtag-tabular">Tabular</span>
+        </div>
+        <div class="card-section-label">Real-world use cases</div>
+        <div class="use-cases">
+          <div class="use-case-item">Search ranking at tech companies</div>
+          <div class="use-case-item">Click-through rate prediction in ads</div>
+          <div class="use-case-item">Insurance risk modeling</div>
+        </div>
+        <div class="complexity-row">
+          <span class="complexity-label">Complexity</span>
+          <div class="complexity-bar"><div class="complexity-fill" style="width:48%;"></div></div>
+          <span class="complexity-val">Mid</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 05 Support Vector Machines -->
+    <div class="card" data-type="sup" style="animation-delay:0.25s">
+      <div class="card-header">
+        <div>
+          <div class="card-num">05</div>
+          <div class="card-name">Support Vector Machines</div>
+          <div class="card-abbr">SVM — Classification &amp; Regression</div>
+        </div>
+        <span class="type-badge type-sup">Supervised</span>
+      </div>
+      <div class="card-body">
+        <p class="card-desc">Finds the hyperplane that maximizes the margin between two classes. Uses the "kernel trick" to project data into higher-dimensional spaces where it becomes linearly separable. Highly effective on small datasets with clear margins.</p>
+        <div class="domain-row">
+          <span class="domain-tag dtag-tabular">Tabular</span>
+          <span class="domain-tag dtag-nlp">NLP</span>
+        </div>
+        <div class="card-section-label">Real-world use cases</div>
+        <div class="use-cases">
+          <div class="use-case-item">Handwritten digit recognition</div>
+          <div class="use-case-item">Text classification (pre-transformer)</div>
+          <div class="use-case-item">Bioinformatics protein classification</div>
+        </div>
+        <div class="complexity-row">
+          <span class="complexity-label">Complexity</span>
+          <div class="complexity-bar"><div class="complexity-fill" style="width:42%;"></div></div>
+          <span class="complexity-val">Mid</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 06 K-Means Clustering -->
+    <div class="card" data-type="unsup" style="animation-delay:0.3s">
+      <div class="card-header">
+        <div>
+          <div class="card-num">06</div>
+          <div class="card-name">K-Means Clustering</div>
+          <div class="card-abbr">KM — Clustering</div>
+        </div>
+        <span class="type-badge type-unsup">Unsupervised</span>
+      </div>
+      <div class="card-body">
+        <p class="card-desc">Partitions unlabeled data into K clusters by iteratively assigning each point to its nearest centroid and recomputing centroids. Converges when assignments stop changing. Sensitive to initial centroid placement and number of K.</p>
+        <div class="domain-row">
+          <span class="domain-tag dtag-tabular">Tabular</span>
+        </div>
+        <div class="card-section-label">Real-world use cases</div>
+        <div class="use-cases">
+          <div class="use-case-item">Customer segmentation for marketing</div>
+          <div class="use-case-item">Image color quantization (compression)</div>
+          <div class="use-case-item">Document topic grouping</div>
+        </div>
+        <div class="complexity-row">
+          <span class="complexity-label">Complexity</span>
+          <div class="complexity-bar"><div class="complexity-fill" style="width:22%; background:var(--accent2);"></div></div>
+          <span class="complexity-val">Low</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 07 PCA -->
+    <div class="card" data-type="unsup" style="animation-delay:0.35s">
+      <div class="card-header">
+        <div>
+          <div class="card-num">07</div>
+          <div class="card-name">Principal Component Analysis</div>
+          <div class="card-abbr">PCA — Dimensionality Reduction</div>
+        </div>
+        <span class="type-badge type-unsup">Unsupervised</span>
+      </div>
+      <div class="card-body">
+        <p class="card-desc">Identifies directions (principal components) of maximum variance in high-dimensional data and projects data onto fewer dimensions. Compresses information while retaining the most meaningful structure. Uses linear algebra (SVD).</p>
+        <div class="domain-row">
+          <span class="domain-tag dtag-tabular">Tabular</span>
+          <span class="domain-tag dtag-vision">Vision</span>
+        </div>
+        <div class="card-section-label">Real-world use cases</div>
+        <div class="use-cases">
+          <div class="use-case-item">Visualizing high-dimensional genomics data</div>
+          <div class="use-case-item">Noise reduction in sensor data</div>
+          <div class="use-case-item">Feature compression before supervised ML</div>
+        </div>
+        <div class="complexity-row">
+          <span class="complexity-label">Complexity</span>
+          <div class="complexity-bar"><div class="complexity-fill" style="width:28%; background:var(--accent2);"></div></div>
+          <span class="complexity-val">Low</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 08 CNN -->
+    <div class="card" data-type="dl" style="animation-delay:0.4s">
+      <div class="card-header">
+        <div>
+          <div class="card-num">08</div>
+          <div class="card-name">Convolutional Neural Network</div>
+          <div class="card-abbr">CNN — Image Understanding</div>
+        </div>
+        <span class="type-badge type-dl">Deep Learning</span>
+      </div>
+      <div class="card-body">
+        <p class="card-desc">Uses convolutional filters that slide over image grids to detect local features (edges → textures → objects). Pooling layers reduce spatial dimensions. Stacking convolutional layers allows hierarchical feature learning from pixels to concepts.</p>
+        <div class="domain-row">
+          <span class="domain-tag dtag-vision">Computer Vision</span>
+          <span class="domain-tag dtag-tabular">Tabular</span>
+        </div>
+        <div class="card-section-label">Real-world use cases</div>
+        <div class="use-cases">
+          <div class="use-case-item">Medical image diagnosis (X-ray, MRI)</div>
+          <div class="use-case-item">Self-driving car object detection</div>
+          <div class="use-case-item">Face recognition and verification</div>
+        </div>
+        <div class="complexity-row">
+          <span class="complexity-label">Complexity</span>
+          <div class="complexity-bar"><div class="complexity-fill" style="width:65%; background:var(--accent4);"></div></div>
+          <span class="complexity-val">High</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 09 Transformer -->
+    <div class="card" data-type="dl" style="animation-delay:0.45s">
+      <div class="card-header">
+        <div>
+          <div class="card-num">09</div>
+          <div class="card-name">Transformer (BERT / GPT)</div>
+          <div class="card-abbr">Attention-based — NLP &amp; Vision</div>
+        </div>
+        <span class="type-badge type-dl">Deep Learning</span>
+      </div>
+      <div class="card-body">
+        <p class="card-desc">Uses self-attention to weigh the relevance of every token to every other token in a sequence simultaneously — enabling long-range dependencies without recurrence. BERT learns bidirectional context; GPT uses causal (left-to-right) attention for generation.</p>
+        <div class="domain-row">
+          <span class="domain-tag dtag-nlp">NLP</span>
+          <span class="domain-tag dtag-vision">Vision</span>
+          <span class="domain-tag dtag-genai">Gen AI</span>
+        </div>
+        <div class="card-section-label">Real-world use cases</div>
+        <div class="use-cases">
+          <div class="use-case-item">Sentiment analysis &amp; text classification</div>
+          <div class="use-case-item">Machine translation (DeepL, Google)</div>
+          <div class="use-case-item">Conversational AI assistants</div>
+        </div>
+        <div class="complexity-row">
+          <span class="complexity-label">Complexity</span>
+          <div class="complexity-bar"><div class="complexity-fill" style="width:82%; background:var(--accent4);"></div></div>
+          <span class="complexity-val">Very High</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10 Diffusion Models -->
+    <div class="card" data-type="gen" style="animation-delay:0.5s">
+      <div class="card-header">
+        <div>
+          <div class="card-num">10</div>
+          <div class="card-name">Diffusion Models</div>
+          <div class="card-abbr">DDPM / Stable Diffusion / DALL·E</div>
+        </div>
+        <span class="type-badge type-gen">Generative AI</span>
+      </div>
+      <div class="card-body">
+        <p class="card-desc">Learns to reverse a gradual noise-adding (diffusion) process: during training, Gaussian noise is added step-by-step to images; the model learns to denoise. At inference, it starts from pure noise and denoises iteratively toward a coherent output guided by a text prompt.</p>
+        <div class="domain-row">
+          <span class="domain-tag dtag-vision">Vision</span>
+          <span class="domain-tag dtag-genai">Gen AI</span>
+        </div>
+        <div class="card-section-label">Real-world use cases</div>
+        <div class="use-cases">
+          <div class="use-case-item">Text-to-image synthesis (Midjourney, DALL·E)</div>
+          <div class="use-case-item">Drug molecule design &amp; discovery</div>
+          <div class="use-case-item">Video and 3D asset generation</div>
+        </div>
+        <div class="complexity-row">
+          <span class="complexity-label">Complexity</span>
+          <div class="complexity-bar"><div class="complexity-fill" style="width:90%; background:var(--accent3);"></div></div>
+          <span class="complexity-val">Very High</span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /algo-grid -->
+
+  <!-- ── Relationship Map ── -->
+  <div class="map-section">
+    <div class="section-label">Relationship Map</div>
+    <div class="map-wrap">
+      <svg viewBox="0 0 860 340" xmlns="http://www.w3.org/2000/svg" aria-label="Algorithm relationship map">
+        <defs>
+          <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M1 1L9 5L1 9" fill="none" stroke="#3a3d45" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+        </defs>
+
+        <!-- Background tiers -->
+        <rect x="8" y="8" width="844" height="68" rx="8" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+        <rect x="8" y="88" width="844" height="68" rx="8" fill="rgba(110,150,200,0.04)" stroke="rgba(110,150,200,0.1)" stroke-width="1"/>
+        <rect x="8" y="168" width="844" height="68" rx="8" fill="rgba(110,200,180,0.04)" stroke="rgba(110,200,180,0.1)" stroke-width="1"/>
+        <rect x="8" y="248" width="844" height="68" rx="8" fill="rgba(200,110,138,0.04)" stroke="rgba(200,110,138,0.1)" stroke-width="1"/>
+
+        <!-- Tier labels -->
+        <text x="22" y="30" font-family="DM Mono, monospace" font-size="8" fill="#5a5a52" letter-spacing="2">SUPERVISED</text>
+        <text x="22" y="110" font-family="DM Mono, monospace" font-size="8" fill="#4a5a72" letter-spacing="2">UNSUPERVISED</text>
+        <text x="22" y="190" font-family="DM Mono, monospace" font-size="8" fill="#3a6a5a" letter-spacing="2">DEEP LEARNING</text>
+        <text x="22" y="270" font-family="DM Mono, monospace" font-size="8" fill="#6a3a4a" letter-spacing="2">GENERATIVE AI</text>
+
+        <!-- SUPERVISED nodes -->
+        <!-- Linear Regression -->
+        <rect x="110" y="22" width="96" height="40" rx="6" fill="rgba(200,169,110,0.12)" stroke="rgba(200,169,110,0.3)" stroke-width="0.8"/>
+        <text x="158" y="38" text-anchor="middle" font-family="Manrope, sans-serif" font-size="9.5" font-weight="600" fill="#c8a96e">Linear</text>
+        <text x="158" y="51" text-anchor="middle" font-family="Manrope, sans-serif" font-size="9.5" font-weight="600" fill="#c8a96e">Regression</text>
+
+        <!-- Decision Tree -->
+        <rect x="222" y="22" width="96" height="40" rx="6" fill="rgba(200,169,110,0.12)" stroke="rgba(200,169,110,0.3)" stroke-width="0.8"/>
+        <text x="270" y="38" text-anchor="middle" font-family="Manrope, sans-serif" font-size="9.5" font-weight="600" fill="#c8a96e">Decision</text>
+        <text x="270" y="51" text-anchor="middle" font-family="Manrope, sans-serif" font-size="9.5" font-weight="600" fill="#c8a96e">Tree</text>
+
+        <!-- Random Forest -->
+        <rect x="334" y="22" width="96" height="40" rx="6" fill="rgba(200,169,110,0.12)" stroke="rgba(200,169,110,0.3)" stroke-width="0.8"/>
+        <text x="382" y="38" text-anchor="middle" font-family="Manrope, sans-serif" font-size="9.5" font-weight="600" fill="#c8a96e">Random</text>
+        <text x="382" y="51" text-anchor="middle" font-family="Manrope, sans-serif" font-size="9.5" font-weight="600" fill="#c8a96e">Forest</text>
+
+        <!-- Gradient Boosting -->
+        <rect x="446" y="22" width="96" height="40" rx="6" fill="rgba(200,169,110,0.12)" stroke="rgba(200,169,110,0.3)" stroke-width="0.8"/>
+        <text x="494" y="38" text-anchor="middle" font-family="Manrope, sans-serif" font-size="9.5" font-weight="600" fill="#c8a96e">Gradient</text>
+        <text x="494" y="51" text-anchor="middle" font-family="Manrope, sans-serif" font-size="9.5" font-weight="600" fill="#c8a96e">Boosting</text>
+
+        <!-- SVM -->
+        <rect x="558" y="22" width="96" height="40" rx="6" fill="rgba(200,169,110,0.12)" stroke="rgba(200,169,110,0.3)" stroke-width="0.8"/>
+        <text x="606" y="44" text-anchor="middle" font-family="Manrope, sans-serif" font-size="9.5" font-weight="600" fill="#c8a96e">SVM</text>
+
+        <!-- UNSUPERVISED nodes -->
+        <!-- K-Means -->
+        <rect x="222" y="102" width="96" height="40" rx="6" fill="rgba(110,150,200,0.12)" stroke="rgba(110,150,200,0.3)" stroke-width="0.8"/>
+        <text x="270" y="118" text-anchor="middle" font-family="Manrope, sans-serif" font-size="9.5" font-weight="600" fill="#6e96c8">K-Means</text>
+        <text x="270" y="131" text-anchor="middle" font-family="Manrope, sans-serif" font-size="9.5" font-weight="600" fill="#6e96c8">Clustering</text>
+
+        <!-- PCA -->
+        <rect x="334" y="102" width="96" height="40" rx="6" fill="rgba(110,150,200,0.12)" stroke="rgba(110,150,200,0.3)" stroke-width="0.8"/>
+        <text x="382" y="126" text-anchor="middle" font-family="Manrope, sans-serif" font-size="9.5" font-weight="600" fill="#6e96c8">PCA</text>
+
+        <!-- DEEP LEARNING nodes -->
+        <!-- CNN -->
+        <rect x="334" y="182" width="96" height="40" rx="6" fill="rgba(110,200,180,0.12)" stroke="rgba(110,200,180,0.3)" stroke-width="0.8"/>
+        <text x="382" y="206" text-anchor="middle" font-family="Manrope, sans-serif" font-size="9.5" font-weight="600" fill="#6ec8b4">CNN</text>
+
+        <!-- Transformer -->
+        <rect x="446" y="182" width="96" height="40" rx="6" fill="rgba(110,200,180,0.12)" stroke="rgba(110,200,180,0.3)" stroke-width="0.8"/>
+        <text x="494" y="206" text-anchor="middle" font-family="Manrope, sans-serif" font-size="9.5" font-weight="600" fill="#6ec8b4">Transformer</text>
+
+        <!-- GENERATIVE AI nodes -->
+        <!-- Diffusion -->
+        <rect x="446" y="262" width="96" height="40" rx="6" fill="rgba(200,110,138,0.12)" stroke="rgba(200,110,138,0.3)" stroke-width="0.8"/>
+        <text x="494" y="278" text-anchor="middle" font-family="Manrope, sans-serif" font-size="9.5" font-weight="600" fill="#c86e8a">Diffusion</text>
+        <text x="494" y="291" text-anchor="middle" font-family="Manrope, sans-serif" font-size="9.5" font-weight="600" fill="#c86e8a">Models</text>
+
+        <!-- GAN (bonus) -->
+        <rect x="558" y="262" width="96" height="40" rx="6" fill="rgba(200,110,138,0.12)" stroke="rgba(200,110,138,0.3)" stroke-width="0.8"/>
+        <text x="606" y="278" text-anchor="middle" font-family="Manrope, sans-serif" font-size="9.5" font-weight="600" fill="#c86e8a">GAN</text>
+        <text x="606" y="291" text-anchor="middle" font-family="Manrope, sans-serif" font-size="9.5" font-weight="600" fill="#c86e8a">(Generative)</text>
+
+        <!-- LLM (bonus) -->
+        <rect x="670" y="262" width="96" height="40" rx="6" fill="rgba(200,110,138,0.12)" stroke="rgba(200,110,138,0.3)" stroke-width="0.8"/>
+        <text x="718" y="278" text-anchor="middle" font-family="Manrope, sans-serif" font-size="9.5" font-weight="600" fill="#c86e8a">LLM / GPT</text>
+        <text x="718" y="291" text-anchor="middle" font-family="Manrope, sans-serif" font-size="9.5" font-weight="600" fill="#c86e8a">(Language)</text>
+
+        <!-- Relationships: DT → RF -->
+        <line x1="318" y1="42" x2="334" y2="42" stroke="rgba(200,169,110,0.4)" stroke-width="0.8" marker-end="url(#arr)"/>
+        <!-- RF → Gradient Boosting (ensemble siblings) -->
+        <line x1="430" y1="42" x2="446" y2="42" stroke="rgba(200,169,110,0.4)" stroke-width="0.8" marker-end="url(#arr)"/>
+        <!-- PCA feeds into CNN (preprocessing) -->
+        <line x1="382" y1="142" x2="382" y2="182" stroke="rgba(110,200,180,0.35)" stroke-width="0.8" stroke-dasharray="3 3" marker-end="url(#arr)"/>
+        <!-- Transformer → Diffusion (foundation) -->
+        <line x1="494" y1="222" x2="494" y2="262" stroke="rgba(200,110,138,0.35)" stroke-width="0.8" stroke-dasharray="3 3" marker-end="url(#arr)"/>
+        <!-- Transformer → LLM -->
+        <line x1="542" y1="202" x2="670" y2="275" stroke="rgba(200,110,138,0.35)" stroke-width="0.8" stroke-dasharray="3 3" marker-end="url(#arr)"/>
+        <!-- CNN → GAN -->
+        <line x1="430" y1="202" x2="558" y2="270" stroke="rgba(200,110,138,0.35)" stroke-width="0.8" stroke-dasharray="3 3" marker-end="url(#arr)"/>
+
+        <!-- Legend inside SVG -->
+        <line x1="680" y1="30" x2="700" y2="30" stroke="rgba(200,169,110,0.5)" stroke-width="0.8"/>
+        <text x="705" y="33" font-family="DM Mono, monospace" font-size="8" fill="#5a5a52">builds on</text>
+        <line x1="680" y1="46" x2="700" y2="46" stroke="rgba(110,200,180,0.5)" stroke-width="0.8" stroke-dasharray="3 3"/>
+        <text x="705" y="49" font-family="DM Mono, monospace" font-size="8" fill="#5a5a52">feeds into</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- ── Footer ── -->
+  <footer class="site-footer">
+    <div class="footer-left">ML Algorithm Visual Framework &mdash; Portfolio Artifact</div>
+    <div class="footer-right">Built with HTML / CSS / JS &mdash; <span id="yr"></span></div>
+  </footer>
+
+</div><!-- /site-wrap -->
+
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  function filterAlgos(type, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const cards = document.querySelectorAll('#algo-grid .card');
+    cards.forEach((card, i) => {
+      const match = type === 'all' || card.dataset.type === type;
+      card.classList.toggle('hidden', !match);
+      if (match) {
+        card.style.animationDelay = (i * 0.05) + 's';
+        card.style.animation = 'none';
+        void card.offsetWidth; // reflow
+        card.style.animation = '';
+      }
+    });
+  }
+
+  // Stagger entrance animations on load
+  document.querySelectorAll('.card').forEach((card, i) => {
+    card.style.animationDelay = (0.05 + i * 0.06) + 's';
+  });
+</script>
+</body>
+</html>
