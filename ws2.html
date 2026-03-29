@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neural Network Visualization</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #f4f6f9; }
+    header { background: #1f2937; color: white; padding: 20px; text-align: center; }
+    section { padding: 40px; margin: 20px; background: white; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    h2 { color: #1f2937; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+    .card { padding: 20px; border-radius: 10px; background: #eef2ff; }
+    a.button { display: inline-block; margin-top: 10px; padding: 10px 15px; background: #2563eb; color: white; text-decoration: none; border-radius: 5px; }
+    .diagram { text-align: center; font-size: 14px; }
+    footer { text-align: center; padding: 20px; color: gray; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Neural Network Playground Exploration</h1>
+  <p>Understanding Neural Networks through Visualization</p>
+  <a class="button" href="https://playground.tensorflow.org/" target="_blank">Open Neural Network Playground</a>
+</header>
+
+<section>
+  <h2>Introduction</h2>
+  <p>
+    Neural networks are powerful machine learning models inspired by the human brain. They are used in tasks like image recognition, language processing, and predictions. 
+    In this project, I explored how neural networks behave using TensorFlow Playground by adjusting layers, neurons, noise, and features.
+  </p>
+</section>
+
+<section>
+  <h2>Neural Network Architecture</h2>
+  <div class="diagram">
+    <p><strong>Input Layer → Hidden Layers → Output Layer</strong></p>
+    <p>
+      Inputs (features) are processed through multiple hidden layers where computations happen, and finally produce an output.
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2>Core Components</h2>
+  <div class="grid">
+    <div class="card"><h3>Layers</h3><p>Layers organize neurons into stages: input, hidden, and output. Each layer transforms the data.</p></div>
+    <div class="card"><h3>Neurons</h3><p>Neurons are individual units that receive inputs, process them, and pass outputs forward.</p></div>
+    <div class="card"><h3>Weights</h3><p>Weights determine the importance of each input. They are adjusted during training.</p></div>
+    <div class="card"><h3>Activation Functions</h3><p>Activation functions introduce non-linearity, allowing networks to solve complex problems.</p></div>
+    <div class="card"><h3>Loss Functions</h3><p>Loss functions measure how far predictions are from actual results.</p></div>
+    <div class="card"><h3>Optimization Algorithms</h3><p>Optimizers adjust weights to minimize loss, such as Gradient Descent.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>Observations from Playground</h2>
+  <ul>
+    <li>Increasing layers improves learning but may slow training.</li>
+    <li>Too much noise reduces accuracy significantly.</li>
+    <li>More neurons increase model complexity and decision boundary precision.</li>
+    <li>Activation functions like ReLU and Tanh impact performance differently.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Summary</h2>
+  <p>
+    Visualizing neural networks helps in understanding how models learn and make decisions. Through this exercise, I learned how structure, parameters, and data quality directly influence performance.
+  </p>
+</section>
+
+<section>
+  <h2>Reflection</h2>
+  <p>
+    Creating this project helped me better understand how neural networks function internally. Experimenting with the Playground made abstract concepts like weights and loss more concrete. 
+    I also realized how small changes in parameters can significantly impact results, reinforcing the importance of tuning models carefully.
+  </p>
+</section>
+
+<footer>
+  <p>Portfolio Artifact - Neural Network Visualization</p>
+</footer>
+
+</body>
+</html>
